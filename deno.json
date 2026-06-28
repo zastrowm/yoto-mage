@@ -1,0 +1,8 @@
+{
+  "tasks": {
+    "dev": "npx next dev",
+    "desktop": "npx next build && deno desktop",
+    "desktop:dev": "npx next build && deno desktop --hmr"
+  },
+  "nodeModulesDir": "auto"
+}
