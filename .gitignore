@@ -3,7 +3,6 @@ node_modules
 dist
 .DS_Store
 .idea
-.claude/
 
 # Staging directory for downloaded audio
 .yoto-mage/
