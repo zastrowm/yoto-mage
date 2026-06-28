@@ -5,7 +5,13 @@ dist
 .idea
 .claude/
 
+# Staging directory for downloaded audio
+.yoto-mage/
+
 # Deno Desktop build output
 yoto-mage
 yoto-mage.exe
 yoto-mage.app
+
+.playwright
+.playwright-cli
