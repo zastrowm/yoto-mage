@@ -1,8 +1,10 @@
 {
   "tasks": {
     "dev": "npx next dev",
+    "storybook": "npx storybook dev -p 6006",
     "desktop": "npx next build && deno desktop",
-    "desktop:dev": "npx next build && deno desktop --hmr"
+    "desktop:dev": "npx next build && deno desktop --hmr",
+    "test:yoto": "deno test tests/yoto/ --allow-read --allow-write --allow-net --allow-env"
   },
   "nodeModulesDir": "auto"
 }

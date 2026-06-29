@@ -4,6 +4,7 @@ import { readdir, mkdir, stat, unlink, rename } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { join, extname } from "node:path";
+import { parseFile } from "music-metadata";
 import { STAGING_DIR } from "@/lib/constants";
 
 const execFileAsync = promisify(execFile);
@@ -26,8 +27,17 @@ export async function checkYtDlp(forceRefresh = false): Promise<{ available: boo
   return ytDlpCache;
 }
 
+async function getDuration(filePath: string): Promise<number | null> {
+  try {
+    const metadata = await parseFile(filePath);
+    return metadata.format.duration ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function listStagedFiles(): Promise<
-  { name: string; size: number; modified: number }[]
+  { name: string; size: number; modified: number; duration: number | null }[]
 > {
   await mkdir(STAGING_DIR, { recursive: true });
   const entries = await readdir(STAGING_DIR);
@@ -35,8 +45,12 @@ export async function listStagedFiles(): Promise<
 
   const results = await Promise.all(
     mp3s.map(async (name) => {
-      const s = await stat(join(STAGING_DIR, name));
-      return { name, size: s.size, modified: s.mtimeMs };
+      const filePath = join(STAGING_DIR, name);
+      const [s, duration] = await Promise.all([
+        stat(filePath),
+        getDuration(filePath),
+      ]);
+      return { name, size: s.size, modified: s.mtimeMs, duration };
     })
   );
 

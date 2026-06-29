@@ -16,12 +16,21 @@ interface StagedFile {
   name: string;
   size: number;
   modified: number;
+  duration: number | null;
 }
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function formatDuration(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  if (h > 0) return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  return `${m}:${String(s).padStart(2, "0")}`;
 }
 
 export function StagedFiles({ initialFiles }: { initialFiles: StagedFile[] }) {
@@ -90,7 +99,12 @@ export function StagedFiles({ initialFiles }: { initialFiles: StagedFile[] }) {
           ) : (
             <div className="flex items-center justify-between gap-4">
               <span className="text-sm font-medium truncate">{file.name}</span>
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-3 shrink-0">
+                {file.duration != null && (
+                  <span className="text-xs text-muted-foreground">
+                    {formatDuration(file.duration)}
+                  </span>
+                )}
                 <span className="text-xs text-muted-foreground">
                   {formatSize(file.size)}
                 </span>

@@ -134,3 +134,51 @@ After implementing a feature, verify:
 1. The implementation conforms to decisions documented in `design/`
 2. If the implementation diverges from a design doc, update the doc (the code is the source of truth)
 3. Design docs remain brief and decision-focused — no API references, no tutorials, no code walkthroughs
+4. A user-facing doc exists in `docs/` for the feature (per the Documentation section above)
+5. `design/TODO.md` is updated (check off completed items, add new ones)
+
+## Verifying Changes
+
+After modifying pages or server actions, verify the change works before reporting success:
+
+```bash
+# Quick check: curl the page and look for errors (Next.js returns 500 with error details in HTML)
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/path
+
+# If non-200, get the error message:
+curl -s http://localhost:3000/path | grep -o '"message":"[^"]*"' | head -5
+
+# Visual check: screenshot the page
+npx playwright screenshot http://localhost:3000/path /tmp/check.png
+```
+
+**`npx tsc --noEmit` is NOT sufficient** — it only checks TypeScript types. It does NOT catch:
+- Next.js "use server" constraints (all exports must be async)
+- Runtime import errors
+- Missing environment variables
+- Middleware/route handler issues
+
+When the dev server is running, always verify pages render correctly after changes.
+
+## Testing
+
+### Exploration tests (`tests/yoto/`)
+
+Use Deno's built-in test runner for API exploration tests that hit the live Yoto API:
+
+```bash
+deno task test:yoto    # runs with --allow-read --allow-write --allow-net --allow-env
+```
+
+These tests require a valid `.yoto-mage/auth.json` (login via the app first). Some endpoints may 403 if the granted scopes don't cover them — handle gracefully with try/catch.
+
+**When to write exploration tests:**
+- When you need to understand an API response shape
+- When adding a new SDK method integration
+- When debugging unexpected API behavior
+
+**Conventions:**
+- Tests live in `tests/yoto/`
+- Save API responses to `tests/yoto/snapshots/` (gitignored) via `saveSnapshot(name, data)` so they can be referenced without re-hitting the API
+- Log key structural info (top-level keys, counts, types) so test output is self-documenting
+- These are **temporary/living tests** — they exist to flesh out understanding, not as regression guards. Delete or refactor them once the knowledge is captured in types or implementation.
