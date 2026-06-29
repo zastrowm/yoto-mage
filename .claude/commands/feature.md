@@ -1,7 +1,7 @@
 ---
 description: One-shot feature dev — plan, implement, verify, adversarial review (yoto-mage)
 argument-hint: <feature description>
-allowed-tools: Read, Bash, Edit, Write, Agent
+allowed-tools: Read, Grep, Glob, Edit, Write, Bash, Agent
 ---
 
 Implement the following feature in yoto-mage, end to end:

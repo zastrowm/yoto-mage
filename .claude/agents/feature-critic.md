@@ -1,7 +1,7 @@
 ---
 name: feature-critic
 description: Fresh-context adversarial reviewer for a feature diff against CLAUDE.md conventions and docs/. Use after implementation, before commit. Read-only — verifies correctness, security, requirement coverage, design fit with existing patterns, and docs obligation; reports flaws with file:line.
-tools: Read, Bash
+tools: Read, Grep, Glob, Bash
 model: opus
 ---
 

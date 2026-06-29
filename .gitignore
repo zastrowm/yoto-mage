@@ -14,6 +14,9 @@ dist
 # API response snapshots (may contain personal data)
 tests/yoto/snapshots/
 
+# TypeScript build cache
+tsconfig.tsbuildinfo
+
 # Deno Desktop build output
 yoto-mage
 yoto-mage.exe
